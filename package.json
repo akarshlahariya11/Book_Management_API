@@ -1,7 +1,6 @@
 {
   "name": "dir",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "dependencies": {
     "express": "^4.17.1",
@@ -12,5 +11,14 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akarshlahariya11/Book_Management_API.git"
+  },
+  "bugs": {
+    "url": "https://github.com/akarshlahariya11/Book_Management_API/issues"
+  },
+  "homepage": "https://github.com/akarshlahariya11/Book_Management_API#readme",
+  "description": ""
 }
