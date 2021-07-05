@@ -1,4 +1,8 @@
+require("dotenv").config();
+ 
+//Frame Work
 const express = require("express");
+const mongoose = require("mongoose");
 
 //Database
 const database = require("./database");
@@ -8,6 +12,17 @@ const bookY = express();
 
 //Configuration
 bookY.use(express.json());
+
+//Establish Database connection
+mongoose.connect(process.env.MONGO_URL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false,
+        useCreateIndex: true
+    }
+)
+.then(() => console.log("Conection established:)"));
+
 
 /*
 Route             /
@@ -83,7 +98,7 @@ bookY.get("/lang/:language", (req, res) => {
         });
     } else {
         return res.json({book : getSpecificBook});
-    }
+    } 
 });
 
 /*
@@ -429,7 +444,7 @@ bookY.delete("/publiction/delete/book/:isbn/:pubId",(req,res)=>{
             return;
         }
     })
-    return res.json({
+    return res.json({ 
     books: database.books,
     publication: database.publications})
 });
