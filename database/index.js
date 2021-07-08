@@ -30,7 +30,7 @@ const author =[
     {
         id: 2,
         name: "Elon Musk",
-        books: ["1234Book", "123DeepSecret",],
+        books: ["1234Book", "123DeepSecret"],
     }
 ];
 
@@ -43,7 +43,7 @@ const publication =[
     {
         id:2,
         name: ["varun"],
-        books: ["bb"],
+        books: ["CU"],
     },
 ];
 

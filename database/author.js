@@ -2,12 +2,25 @@ const mongoose = require("mongoose");
 
 //Author schema
 const AuthorSchema = mongoose.Schema({
-    id: Number,
-    name: String,
-    books: [String],
+    id: {
+        type: Number,
+        required: true,
+      },
+    name: {
+        type: String,
+        required: true,
+        minLength: 8,
+        maxLength: 10,
+      },
+    books: {
+        type: [String],
+        required: true,
+        minLength: 8,
+        maxLength: 10,
+      },
 });
 
-//Creae a Author model
+//Create a Author model
 const AuthorModel = mongoose.model("authors",AuthorSchema);
 
 module.exports = AuthorModel;

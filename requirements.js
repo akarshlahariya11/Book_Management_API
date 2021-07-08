@@ -30,11 +30,11 @@
 
 //PUT
 //Update Book title    🚀📌
-//Update or add new author  🚀
+//Update or add new author  🚀 📌
  
 //DELETE
-//delete a book🚀
-//delete an author from a book ---X---
+//delete a book🚀📌
+//delete an author from a book 📌
 
 
 //Authors
