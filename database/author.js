@@ -9,15 +9,13 @@ const AuthorSchema = mongoose.Schema({
     name: {
         type: String,
         required: true,
-        minLength: 8,
-        maxLength: 10,
+        minLength: 5
       },
     books: {
         type: [String],
         required: true,
-        minLength: 8,
-        maxLength: 10,
-      },
+        minLength: 5
+      }
 });
 
 //Create a Author model

@@ -12,9 +12,12 @@ Parameter         none
 Methods           GET
 */
 Router.get("/", async(req, res) => {
-
-    const getAllAuthors = await AuthorModel.find();
+    try {
+        const getAllAuthors = await AuthorModel.find();
     return res.json({author: getAllAuthors});
+    } catch (error) {
+        return res.json({error: error.message});
+    }
 }); 
 
 /*
@@ -25,6 +28,7 @@ Parameter         isbn
 Methods           GET
 */
 Router.get("/book/:isbn", (req, res) => {
+   try {
     const getSpecificAuthor = database.author.filter(
         (author) => author.books.includes(req.params.isbn)
     );
@@ -36,6 +40,9 @@ Router.get("/book/:isbn", (req, res) => {
     } else {
         return res.json({authors: getSpecificAuthor});
     }
+   } catch (error) {
+       return res.json({error: error.message});
+   }
 });
 
 /*
@@ -46,6 +53,7 @@ Parameter         isbn
 Methods           GET
 */
 Router.get("/n/:name", (req, res) => {
+   try {
     const getSpecificAuthor = database.author.filter(
         (author) => author.name.includes(req.params.name)
     );
@@ -57,6 +65,9 @@ Router.get("/n/:name", (req, res) => {
     } else {
         return res.json({authors: getSpecificAuthor});
     }
+   } catch (error) {
+        return res.json({error: error.message});
+}
 });
 
 /*
@@ -67,11 +78,15 @@ Parameter         NONE
 Methods           POST
 */
 Router.post("/add", async(req, res) => {
- 
-    const {newAuthor} = req.body;
-    //database.author.push(newAuthor);
-    await AuthorModel.create(newAuthor);
-    return res.json({message: "author was added"});
+    try {
+        const {newAuthor} = req.body;
+        //database.author.push(newAuthor);
+        await AuthorModel.create(newAuthor);
+        return res.json({message: "author was added"});
+    } catch (error) {
+        return res.json({error: error.message});
+    }
+   
 
 });
 
@@ -83,13 +98,17 @@ Parameter         isbn
 Methods           PUT
 */
 Router.put("/update/:isbn", (req, res) => {
-    database.author.forEach((authors) => {
-        if(authors.ISBN === req.params.isbn) {
-         authors.isbn = req.body.newAuthor;
-            return;
-        }
-    });
-    return res.json({author: database.author});
+    try {
+        database.author.forEach((authors) => {
+            if(authors.ISBN === req.params.isbn) {
+             authors.isbn = req.body.newAuthor;
+                return;
+            }
+        });
+        return res.json({author: database.author});
+    } catch (error) {
+        return res.json({error: error.message});
+    }
 });
 
 /*
@@ -100,11 +119,15 @@ Parameter         id
 Method            DELETE
 */
 Router.delete("/delete/:isbn",(req,res)=> {
+   try {
     const updatedAuthorDatabase = database.author.filter(
         (author) => author.id !== req.params.id
     );
     database.authors = updatedAuthorDatabase;
     return res.json({author: database.authors});
+   } catch (error) {
+        return res.json({error: error.message});
+   }
 });
 
 module.exports = Router;

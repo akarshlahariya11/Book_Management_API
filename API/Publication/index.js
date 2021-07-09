@@ -12,10 +12,12 @@ Parameter         NONE
 Methods           GET
 */
 Router.get("/", async(req, res) => {
-
-    const getAllPublications = await PublicationModel.find();
-    return res.json({publications: getAllPublications  })
-
+    try {
+        const getAllPublications = await PublicationModel.find();
+    return res.json({publications: getAllPublications });
+    } catch (error) {
+        return res.json({error: error.message});
+    }
 });
 
 
@@ -69,11 +71,14 @@ Parameter         NONE
 Methods           POST
 */
 Router.post("/add",async (req, res) => {
-   
+   try {
     const {newPublication } = req.body;
-   // database.publication.push(newPublication);
-   await PublicationModel.create(newPublication);
-    return res.json({message: "publication was added"});
+    // database.publication.push(newPublication);
+    await PublicationModel.create(newPublication);
+     return res.json({message: "publication was added"});
+   } catch (error) {
+        return res.json({error: error.message});
+   }
 
 });
 
