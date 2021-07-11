@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-//Publication schema
+//Creating Publication schema
 const PublicationSchema = mongoose.Schema({
     id: {
         type: Number,
@@ -18,7 +18,7 @@ const PublicationSchema = mongoose.Schema({
       }
 });
 
-//Creae a Publication model
+//Create a Publication model
 const PublicationModel = mongoose.model("publications",PublicationSchema);
 
 module.exports = PublicationModel;

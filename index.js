@@ -16,7 +16,7 @@ const bookY = express();
 //Configuration
 bookY.use(express.json());
 
-//Establish Database connection
+//Establishing Database connection
 mongoose.connect(process.env.MONGO_URL, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -31,7 +31,6 @@ mongoose.connect(process.env.MONGO_URL, {
 bookY.use("/book", Books);
 bookY.use("/author", Authors);
 bookY.use("/publication", Publications);
-
 
 bookY.listen(3000, () => console.log("Hey, Server is running! 🥱"));
 

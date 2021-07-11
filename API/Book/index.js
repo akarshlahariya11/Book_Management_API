@@ -4,6 +4,11 @@ const Router = require("express").Router();
 //Database Models
 const BookModel = require("../../database/book.js");
 
+
+//1.  GET Method :-
+
+
+
 /*
 Route             /
 Description       Get all books
@@ -12,13 +17,17 @@ Parameter         None
 Methods           GET
 */
 Router.get("/", async(req, res) => {
-    const getAllBooks = await BookModel.find();
+    try {
+        const getAllBooks = await BookModel.find();
     return res.json({books: getAllBooks}) 
+    } catch (error) {
+        return res.json({error: error.message});
+    }
 });
 
 
 /*
-Route             /is
+Route             /book/is
 Description       Get specific books based on ISBN
 Access            Public
 Parameter         isbn 
@@ -26,10 +35,9 @@ Methods           GET
 */
 Router.get("/is/:isbn", async(req,res) => {
 
- 
-    const getSpecificBook = await BookModel.findOne({ISBN: req.params.isbn})
+    try {
+        const getSpecificBook = await BookModel.findOne({ISBN: req.params.isbn})
     //null-> False
-    
   /*  const getSpecificBook = database.books.filter(
         (book) => book.ISBN === req.params.isbn
         ); */
@@ -42,10 +50,14 @@ Router.get("/is/:isbn", async(req,res) => {
     else{
         return res.json({book: getSpecificBook});
     }
+    } catch (error) {
+        return res.json({error: error.message});
+    }
+    
 });
 
 /*
-Route             /c
+Route             /book/c
 Description       Get specific books based on category
 Access            Public
 Parameter         category
@@ -53,44 +65,61 @@ Methods           GET
 */
 
  Router.get("/c/:category",async (req, res) => {
-  
-    const getSpecificBooks = await BookModel.findOne({
-        category: req.params.category,
-    });
-
-//      const getSpecificBook = database.books.filter(
-//         (book) => book.category.includes(req.params.category)
-//     );
-
-    if(!getSpecificBooks) {
-        return res.json({
-            error: `No book found for the category of ${req.params.category} `
+    
+    try {
+        const getSpecificBooks = await BookModel.findOne({
+            category: req.params.category,
         });
-    } else {
-        return res.json({books: getSpecificBooks});
+    
+    //      const getSpecificBook = database.books.filter(
+    //         (book) => book.category.includes(req.params.category)
+    //     );
+    
+        if(!getSpecificBooks) {
+            return res.json({
+                error: `No book found for the category of ${req.params.category} `
+            });
+        } else {
+            return res.json({books: getSpecificBooks});
+        }
+    } catch (error) {
+        return res.json({error: error.message});
     }
 });
 
 /*
-Route             /lang
+Route             /book/lang
 Description       Get specific books based on languages
 Access            Public
 Parameter         language
 Methods           GET
 */
-Router.get("/lang/:language", (req, res) => {
-    const getSpecificBook = database.books.filter(
-        (book) => book.language === req.params.language
-    );
-
-    if(getSpecificBook.length === 0){
-        return res.json({
-            error: `No book found in language ${req.params.language}`
+Router.get("/lang/:language", async(req, res) => {
+    try {
+        const getSpecificBooks = await BookModel.findOne({
+            language: req.params.language,
         });
-    } else {
-        return res.json({book : getSpecificBook});
-    } 
+        // const getSpecificBook = database.books.filter(
+        //     (book) => book.language === req.params.language
+        // );
+    
+        if(!getSpecificBooks) {
+            return res.json({
+                error: `No book found in language ${req.params.language}`
+            });
+        } else {
+            return res.json({book : getSpecificBooks});
+        } 
+    } catch (error) {
+        return res.json({error: error.message});
+    }
+
 });
+
+
+//2.  POST Method :-
+
+
 
 /*
 Route             /book/new
@@ -111,6 +140,11 @@ Router.post("/new",async (req, res) => {
     }
 });
 
+
+//3. PUT Method :-
+
+
+
 /*
 Route             /book/update/title
 Description       update book title
@@ -124,8 +158,9 @@ Router.put("/update/title/:isbn", async(req, res) => {
         {
            ISBN: req.params.isbn,  //request the isbn
         },
-        {
+        {  
             title: req.body.newBookTitle,  //Title Updated
+            
         },
         {
             new: true,  //to get updated value
@@ -144,6 +179,8 @@ Router.put("/update/title/:isbn", async(req, res) => {
    }
    
 });
+
+
 
 /*
 Route             /book/update/author
@@ -203,6 +240,12 @@ Router.put("/author/update/:isbn", async(req, res)=> {
     }
     });
 
+
+
+//3. DELETE Method :-
+
+
+
 /*
 Route             /book/delete/:isbn
 Description       //Delete a book
@@ -227,6 +270,8 @@ Router.delete("/delete/:isbn",async(req,res)=> {
         return res.json({error: error.message });   
     }
 });
+
+
 
 /*
 Route             /book/delete/author/:isbn/:authorId
@@ -295,4 +340,5 @@ Router.delete("/delete/author/:isbn/:authorId",async(req,res)=> {
     }
 });
 
+//Exporting the module
 module.exports = Router;

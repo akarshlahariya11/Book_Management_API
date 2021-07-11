@@ -1,12 +1,16 @@
 //Initializing Express Router
 const Router = require("express").Router();
 
+
 //Database Models
 const AuthorModel = require("../../database/author.js");
 
+//1. GET Method:-
+
+
 /*
 Route             /author
-Description       Get all authors
+Description       get all authors
 Access            Public
 Parameter         none
 Methods           GET
@@ -46,29 +50,31 @@ Router.get("/book/:isbn", (req, res) => {
 });
 
 /*
-Route             /author/book
+Route             /author/specific
 Description       get specific authors
 Access            Public
-Parameter         isbn
+Parameter         id
 Methods           GET
 */
-Router.get("/n/:name", (req, res) => {
-   try {
-    const getSpecificAuthor = database.author.filter(
-        (author) => author.name.includes(req.params.name)
-    );
-
-    if(getSpecificAuthor.length === 0) {
-        return res.json({
-            error: `No Author found for the author of ${req.params.name}`,
-        });
-    } else {
-        return res.json({authors: getSpecificAuthor});
+Router.get("/specific/:id",async(req,res)=> {
+    try {
+    {
+        const getAuthorById = await AuthorModel.find({id:parseInt(req.params.id)})
+        if(!getAuthorById)
+        {
+            return res.json({error:`No such author with id : ${req.params.id} was found `});
+        }
+        return res.json({author_by_id : getAuthorById });
     }
    } catch (error) {
         return res.json({error: error.message});
 }
 });
+
+
+//2.  POST MEthod :-
+
+
 
 /*
 Route             /author/add
@@ -80,15 +86,22 @@ Methods           POST
 Router.post("/add", async(req, res) => {
     try {
         const {newAuthor} = req.body;
+
         //database.author.push(newAuthor);
+        
         await AuthorModel.create(newAuthor);
         return res.json({message: "author was added"});
     } catch (error) {
+       
         return res.json({error: error.message});
     }
    
-
 });
+
+
+//3.  PUT Method :-
+
+
 
 /*
 Route             /author/update/:isbn
@@ -97,19 +110,37 @@ Access            Public
 Parameter         isbn
 Methods           PUT
 */
-Router.put("/update/:isbn", (req, res) => {
+Router.put("/update/:isbn", async(req, res) => {
     try {
-        database.author.forEach((authors) => {
-            if(authors.ISBN === req.params.isbn) {
-             authors.isbn = req.body.newAuthor;
-                return;
+        const updatedAuthor = await AuthorModel.findOneAndUpdate(
+            {
+                ISBN: req.params.isbn
+            },
+            {   $addToSet: {
+                 author: req.body.newAuthor   
+                }
+            },
+            {
+                new: true
             }
-        });
-        return res.json({author: database.author});
-    } catch (error) {
-        return res.json({error: error.message});
-    }
+        );
+         // database.author.forEach((authors) => {
+         //     if(authors.ISBN === req.params.isbn) {
+         //      authors.isbn = req.body.newAuthor;
+         //         return;
+         //     }
+         // });
+         return res.json({author: updatedAuthor});
+     } catch (error) {
+
+         return res.json({error: error.message});
+     }
 });
+
+
+//4.  Delete Method :-
+
+
 
 /*
 Route             /author/delete:authorId
@@ -118,13 +149,18 @@ Access            Public
 Parameter         id
 Method            DELETE
 */
-Router.delete("/delete/:isbn",(req,res)=> {
+Router.delete("/delete/:id", async(req,res)=> {
    try {
-    const updatedAuthorDatabase = database.author.filter(
-        (author) => author.id !== req.params.id
+    const updatedAuthorDatabase = await AuthorModel.findOneAndDelete(
+        {
+            id: req.params.id
+        }
     );
-    database.authors = updatedAuthorDatabase;
-    return res.json({author: database.authors});
+    // const updatedAuthorDatabase = database.author.filter(
+    //     (author) => author.id !== req.params.id
+    // );
+    // database.authors = updatedAuthorDatabase;
+    return res.json({author: updatedAuthorDatabase});
    } catch (error) {
         return res.json({error: error.message});
    }
